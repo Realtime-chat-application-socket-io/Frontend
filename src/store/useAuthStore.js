@@ -3,11 +3,9 @@ import { axiosInstance } from "../lib/axios";
 import toast from "react-hot-toast";
 import { io } from "socket.io-client";
 
-// ✅ FIXED: proper backend URL handling
+// ✅ Backend URL fix (works both local + production)
 const BASE_URL =
   import.meta.env.VITE_BACKEND_URL || "http://localhost:3000";
-
-
 
 export const useAuthStore = create((set, get) => ({
   authUser: null,
@@ -17,15 +15,21 @@ export const useAuthStore = create((set, get) => ({
   socket: null,
   onlineUsers: [],
 
+  // ✅ FIXED: always stop loading
   checkAuth: async () => {
     try {
       const res = await axiosInstance.get("/auth/check");
       set({ authUser: res.data });
-      get().connectSocket();
+
+      // connect socket only if user exists
+      if (res.data) {
+        get().connectSocket();
+      }
     } catch (error) {
       console.log("Error in authCheck:", error);
       set({ authUser: null });
     } finally {
+      // 🔥 IMPORTANT: stop spinner ALWAYS
       set({ isCheckingAuth: false });
     }
   },
@@ -39,7 +43,6 @@ export const useAuthStore = create((set, get) => ({
       toast.success("Account created successfully!");
       get().connectSocket();
     } catch (error) {
-      // ✅ SAFE ERROR HANDLING
       toast.error(error?.response?.data?.message || "Signup failed");
     } finally {
       set({ isSigningUp: false });
@@ -90,7 +93,7 @@ export const useAuthStore = create((set, get) => ({
 
     const socket = io(BASE_URL, {
       withCredentials: true,
-      transports: ["websocket"], // ✅ FIX for production
+      transports: ["websocket"],
     });
 
     socket.connect();
@@ -102,6 +105,8 @@ export const useAuthStore = create((set, get) => ({
   },
 
   disconnectSocket: () => {
-    if (get().socket?.connected) get().socket.disconnect();
+    if (get().socket?.connected) {
+      get().socket.disconnect();
+    }
   },
 }));
