@@ -1,10 +1,14 @@
 import daisyui from "daisyui";
+
 /** @type {import('tailwindcss').Config} */
 export default {
-  content: ["./index.html","./src/**/*.{js,ts,jsx,tsx"],
+  content: [
+    "./index.html",
+    "./src/**/*.{js,ts,jsx,tsx}", 
+  ],
   theme: {
     extend: {
-       animation: {
+      animation: {
         border: "border 4s linear infinite",
       },
       keyframes: {
@@ -14,5 +18,5 @@ export default {
       },
     },
   },
-  plugins: [require("daisyui")],
+  plugins: [daisyui], 
 };
