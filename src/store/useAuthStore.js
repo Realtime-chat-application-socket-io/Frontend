@@ -4,7 +4,8 @@ import toast from "react-hot-toast";
 import { io } from "socket.io-client";
 
 // ✅ Backend URL fix (works both local + production)
-const BASE_URL = import.meta.env.MODE === "development" ? "http://localhost:8000" : (import.meta.env.VITE_BACKEND_URL || "https://chatify-nesy.onrender.com");
+let RAW_BACKEND_URL = import.meta.env.MODE === "development" ? "http://localhost:8000" : (import.meta.env.VITE_BACKEND_URL || "https://chatify-nesy.onrender.com");
+const BASE_URL = RAW_BACKEND_URL.replace(/\/api$/, "");
 
 export const useAuthStore = create((set, get) => ({
   authUser: null,
@@ -25,11 +26,7 @@ export const useAuthStore = create((set, get) => ({
       return;
     }
 
-    const res = await axiosInstance.get("/auth/check", {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
+    const res = await axiosInstance.get("/auth/check");
 
     set({ authUser: res.data });
 
@@ -57,6 +54,7 @@ export const useAuthStore = create((set, get) => ({
       toast.success("Account created successfully!");
       get().connectSocket();
     } catch (error) {
+      console.error("Signup error:", error);
       toast.error(error?.response?.data?.message || "Signup failed");
     } finally {
       set({ isSigningUp: false });
@@ -75,6 +73,7 @@ export const useAuthStore = create((set, get) => ({
       toast.success("Logged in successfully");
       get().connectSocket();
     } catch (error) {
+      console.error("Login error:", error);
       toast.error(error?.response?.data?.message || "Login failed");
     } finally {
       set({ isLoggingIn: false });
