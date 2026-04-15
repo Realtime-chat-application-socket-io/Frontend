@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Login</title>
+
+<!-- Tailwind CDN -->
+<script src="https://cdn.tailwindcss.com"></script>
+
+<style>
+
+body{
+background: linear-gradient(120deg,#d9dde3,#bfc7cf);
+height:100vh;
+display:flex;
+align-items:center;
+justify-content:center;
+font-family:sans-serif;
+}
+;
+/* card gradient */
+.login-card{
+background: linear-gradient(180deg,#4ea3ff,#3b7de0);
+width:320px;
+padding:40px 30px;
+border-radius:40px;
+box-shadow:0 20px 40px rgba(0,0,0,0.15);
+}
+
+input{
+background:transparent;
+border:none;
+border-bottom:1px solid rgba(255,255,255,0.6);
+outline:none;
+color:white;
+padding:8px 0;
+width:100%;
+}
+
+input::placeholder{
+color:rgba(255,255,255,0.8);
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="login-card text-white">
+
+<h1 class="text-center text-3xl font-semibold mb-8">Login</h1>
+
+<div class="mb-6">
+<input type="email" placeholder="Email">
+</div>
+
+<div class="mb-4">
+<input type="password" placeholder="Password">
+</div>
+
+<div class="flex justify-between items-center text-sm mb-8">
+
+<label class="flex items-center gap-2">
+<input type="checkbox" class="accent-white">
+<span>Remember me</span>
+</label>
+
+<a href="#" class="underline">Forgot password ?</a>
+
+</div>
+
+<button onclick="login()" 
+class="w-full bg-white text-blue-600 font-semibold py-3 rounded-xl hover:bg-gray-200 transition">
+
+Log in
+
+</button>
+
+<p class="text-center text-sm mt-6 underline cursor-pointer">
+Create an account
+</p>
+
+</div>
+
+<script>
+
+function login(){
+
+let email=document.querySelector('input[type="email"]').value
+let password=document.querySelector('input[type="password"]').value
+
+if(email=="" || password==""){
+alert("Please fill all fields")
+}
+else{
+alert("Login Successful")
+}
+
+}
+
+</script>
+
+</body>
+</html>
