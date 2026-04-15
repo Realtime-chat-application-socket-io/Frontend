@@ -30,4 +30,4 @@ const NoChatHistoryPlaceholder = ({ name }) => {
   );
 };
 
-export default NoChatHistoryPlaceholder;
+export default temp;
