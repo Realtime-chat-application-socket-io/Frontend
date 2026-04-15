@@ -14,24 +14,36 @@ export const useAuthStore = create((set, get) => ({
   socket: null,
   onlineUsers: [],
 
-  // ✅ FIXED: always stop loading
+ 
   checkAuth: async () => {
-    try {
-      const res = await axiosInstance.get("/auth/check");
-      set({ authUser: res.data });
+  try {
+    const token = localStorage.getItem("chatify_token");
 
-      // connect socket only if user exists
-      if (res.data) {
-        get().connectSocket();
-      }
-    } catch (error) {
-      console.log("Error in authCheck:", error);
-      set({ authUser: null });
-    } finally {
-      // 🔥 IMPORTANT: stop spinner ALWAYS
-      set({ isCheckingAuth: false });
+   
+    if (!token) {
+      set({ authUser: null,isCheckingAuth: false});
+      return;
     }
-  },
+
+    const res = await axiosInstance.get("/auth/check", {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    set({ authUser: res.data });
+
+    if (res.data) {
+      get().connectSocket();
+    }
+
+  } catch (error) {
+    console.log("Error in authCheck:", error);
+    set({ authUser: null });
+  } finally {
+    set({ isCheckingAuth: false });
+  }
+},
 
   signup: async (data) => {
     set({ isSigningUp: true });
